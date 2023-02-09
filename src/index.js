@@ -18,31 +18,43 @@ function getLocation(city) {
 
 function printElements(response) {
   let unixTimestamp = response.bikes[0].date_stolen;
+  
   let date = new Date(unixTimestamp * 1000);
   let dateStolen = date.toLocaleDateString("en-US");
   let serialNum = response.bikes[0].serial;
   let today = new Date();
   let unixDate = Math.floor(new Date(today).getTime() / 1000);
-  let ul = document.getElementById("show-response");
+  
+  // let ul = document.getElementById("show-response");
   for (let x = 0; x < response.bikes.length; x++) {
+    const bikeContainer = document.getElementById("bike-response");
+    let bikeResponse = document.createElement("div");
+    bikeResponse.setAttribute("class", "bikes");
     let pDescription = document.createElement('p');
     let pColor = document.createElement('p');
     let pDate = document.createElement('p');
     let pSerialNumber = document.createElement('p');
+    let pbikeImage = document.createElement("img");
+
     let description = response.bikes[x].description;
+    let bikeImageURL = response.bikes[x].thumb;
     response.bikes.forEach(element => {
       if (element.date_stolen > (unixDate - 604800000)) {
         pColor.innerText = "Color: " + response.bikes[x].frame_colors;
         pDate.innerText = "Date Stolen: " + dateStolen;
         pSerialNumber.innerText = "Serial Number: " + serialNum;
+        pbikeImage.src = bikeImageURL;
         if (description === null) {
           description = "There is no decription for this bike.";
           pDescription.innerText = description;
         } else { pDescription.innerText = "Description: " + description; }
-        ul.append(pDescription);
-        ul.append(pColor);
-        ul.append(pDate);
-        ul.append(pSerialNumber);
+
+        bikeContainer.append(bikeResponse);
+        bikeResponse.append(pDescription);
+        bikeResponse.append(pColor);
+        bikeResponse.append(pDate);
+        bikeResponse.append(pSerialNumber);
+        bikeResponse.append(pbikeImage);
       }
     });
   }
